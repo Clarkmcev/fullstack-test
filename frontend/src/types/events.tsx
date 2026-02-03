@@ -13,9 +13,8 @@ export enum EventTypeEnum {
 
 export type Event = {
   type: EventTypeEnum | null;
-  description: string;
+  description: string | null;
   budget: number | null;
   numberOfPersons: number | null;
-  date: string;
-  //   payload: object;
+  date: string | null;
 };

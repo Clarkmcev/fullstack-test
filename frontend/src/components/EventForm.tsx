@@ -1,20 +1,31 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { createEventRequest, resetSubmitStatus } from "../store/eventsSlice";
-import { EventTypeEnum, Event } from "../types/events";
+import { EventTypeEnum } from "../types/events";
+
+export interface EventFormData {
+  type: string;
+  description: string;
+  budget: number | "";
+  numberOfPersons: number | "";
+  date: string;
+  payload: Record<string, unknown>;
+}
 
 export default function EventForm() {
   const dispatch = useAppDispatch();
   const { submitStatus, error } = useAppSelector((state) => state.events);
 
-  const [formData, setFormData] = useState<Event>({
-    type: null,
+  const initFormData: EventFormData = {
+    type: "",
     description: "",
-    budget: null,
-    numberOfPersons: null,
+    budget: "",
+    numberOfPersons: "",
     date: "",
-    // payload: "{}",
-  });
+    payload: {},
+  };
+
+  const [formData, setFormData] = useState<EventFormData>(initFormData);
   const [jsonError, setJsonError] = useState<string>("");
 
   const eventTypes = Object.values(EventTypeEnum) as EventTypeEnum[];
@@ -30,14 +41,14 @@ export default function EventForm() {
   const handleBudgetChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      budget: e.target.value ? parseFloat(e.target.value) : null,
+      budget: e.target.value ? parseFloat(e.target.value) : "",
     });
   };
 
   const handleNumberOfPersonsChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      numberOfPersons: e.target.value ? parseInt(e.target.value) : null,
+      numberOfPersons: e.target.value ? parseInt(e.target.value) : "",
     });
   };
 
@@ -62,7 +73,7 @@ export default function EventForm() {
 
     // Validate budget
     const budget = formData.budget;
-    if (budget === null || isNaN(budget) || budget < 0) {
+    if (budget === "" || isNaN(budget) || budget < 0) {
       alert("Please enter a valid budget");
       return;
     }
@@ -70,7 +81,7 @@ export default function EventForm() {
     // Validate number of persons
     const numberOfPersons = formData.numberOfPersons;
     if (
-      numberOfPersons === null ||
+      numberOfPersons === "" ||
       isNaN(numberOfPersons) ||
       numberOfPersons < 1
     ) {
@@ -89,10 +100,10 @@ export default function EventForm() {
       createEventRequest({
         type: formData.type,
         description: formData.description,
-        budget,
-        numberOfPersons,
+        budget: formData.budget as number,
+        numberOfPersons: formData.numberOfPersons as number,
         date: formData.date,
-        payload: parsedPayload,
+        payload: formData.payload,
       }),
     );
   };
@@ -100,14 +111,7 @@ export default function EventForm() {
   // Auto-reset form on successful submission
   useEffect(() => {
     if (submitStatus === "succeeded") {
-      setFormData({
-        type: null,
-        description: "",
-        budget: null,
-        numberOfPersons: null,
-        date: "",
-        // payload: "{}",
-      });
+      setFormData(initFormData);
       const timer = setTimeout(() => {
         dispatch(resetSubmitStatus());
       }, 3000);

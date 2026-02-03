@@ -1,14 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Event {
-  id: string;
   type: string;
   description: string;
   budget: number;
   numberOfPersons: number;
   date: string;
   payload: object;
-  createdAt: string;
+  createdAt?: string;
 }
 
 interface EventsState {
@@ -46,17 +45,7 @@ const eventsSlice = createSlice({
     },
 
     // Create event actions
-    createEventRequest: (
-      state,
-      _: PayloadAction<{
-        type: string;
-        description: string;
-        budget: number;
-        numberOfPersons: number;
-        date: string;
-        payload: object;
-      }>,
-    ) => {
+    createEventRequest: (state, _: PayloadAction<Event>) => {
       state.submitStatus = "loading";
       state.error = null;
     },
