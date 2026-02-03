@@ -1,30 +1,20 @@
-import { useEffect, useState } from "react";
-
-const API_URL = "http://localhost:8080";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import EventFormPage from "./pages/EventFormPage";
+import EventListPage from "./pages/EventListPage";
 
 function App() {
-    const [status, setStatus] = useState<string>("checking...");
-
-    useEffect(() => {
-        fetch(API_URL)
-            .then((res) => res.json())
-            .then((data) => setStatus(data.status))
-            .catch(() => setStatus("error - is the backend running?"));
-    }, []);
-
-    return (
-        <div style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
-            <h1>Event Log Dashboard</h1>
-            <p>
-                Backend status: <strong>{status}</strong>
-            </p>
-            <hr style={{ margin: "2rem 0" }} />
-            {/* TODO: Implement your UI here */}
-            <p style={{ color: "#666" }}>
-                Replace this with your event submission form and event list.
-            </p>
-        </div>
-    );
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<EventFormPage />} />
+          <Route path="/events" element={<EventListPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;

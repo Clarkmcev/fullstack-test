@@ -1,0 +1,150 @@
+version: '3'
+
+tasks:
+  # Docker Compose Commands
+  up:
+    desc: Start all services with docker-compose
+    cmds:
+      - docker-compose up -d
+
+  down:
+    desc: Stop all services
+    cmds:
+      - docker-compose down
+
+  build:
+    desc: Build all services
+    cmds:
+      - docker-compose build
+
+  rebuild:
+    desc: Rebuild and restart all services
+    cmds:
+      - docker-compose down
+      - docker-compose build
+      - docker-compose up -d
+
+  restart:
+    desc: Restart all services
+    cmds:
+      - docker-compose restart
+
+  # Logs Commands
+  logs:
+    desc: View logs from all services
+    cmds:
+      - docker-compose logs -f
+
+  logs-backend:
+    desc: View backend logs
+    cmds:
+      - docker-compose logs -f backend
+
+  logs-frontend:
+    desc: View frontend logs
+    cmds:
+      - docker-compose logs -f frontend
+
+  logs-db:
+    desc: View database logs
+    cmds:
+      - docker-compose logs -f postgres
+
+  # Shell Access Commands
+  shell-backend:
+    desc: Access backend container shell
+    cmds:
+      - docker-compose exec backend sh
+
+  shell-frontend:
+    desc: Access frontend container shell
+    cmds:
+      - docker-compose exec frontend sh
+
+  shell-db:
+    desc: Access PostgreSQL shell
+    cmds:
+      - docker-compose exec postgres psql -U postgres -d fullstack_db
+
+  db-shell:
+    desc: Alias for shell-db
+    cmds:
+      - task: shell-db
+
+  # Database Commands
+  db-create:
+    desc: Create the database
+    cmds:
+      - docker-compose exec postgres createdb -U postgres fullstack_db
+
+  db-drop:
+    desc: Drop the database
+    cmds:
+      - docker-compose exec postgres dropdb -U postgres fullstack_db
+
+  db-reset:
+    desc: Drop and recreate the database
+    cmds:
+      - task: db-drop
+      - task: db-create
+
+  # Development Commands
+  dev-backend:
+    desc: Run backend in development mode (outside Docker)
+    dir: backend
+    cmds:
+      - go run main.go
+
+  dev-frontend:
+    desc: Run frontend in development mode (outside Docker)
+    dir: frontend
+    cmds:
+      - npm run dev
+
+  # Testing Commands
+  test-backend:
+    desc: Run backend tests
+    dir: backend
+    cmds:
+      - go test ./...
+
+  # Cleanup Commands
+  clean:
+    desc: Remove all containers, volumes, and images
+    cmds:
+      - docker-compose down -v --rmi all
+
+  clean-volumes:
+    desc: Remove all volumes
+    cmds:
+      - docker-compose down -v
+
+  # Status Commands
+  ps:
+    desc: Show running containers
+    cmds:
+      - docker-compose ps
+
+  status:
+    desc: Show status of all services
+    cmds:
+      - docker-compose ps
+
+  # Install Commands
+  install-backend:
+    desc: Install backend dependencies
+    dir: backend
+    cmds:
+      - go mod download
+
+  install-frontend:
+    desc: Install frontend dependencies
+    dir: frontend
+    cmds:
+      - npm install
+
+  install:
+    desc: Install all dependencies
+    cmds:
+      - task: install-backend
+      - task: install-frontend
