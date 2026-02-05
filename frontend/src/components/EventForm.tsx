@@ -1,7 +1,10 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { createEventRequest, resetSubmitStatus } from "../store/eventsSlice";
-import { EventTypeEnum } from "../types/events";
+import {
+  createEventRequest,
+  EventTypeEnum,
+  resetSubmitStatus,
+} from "../store/eventsSlice";
 
 export interface EventFormData {
   type: string;
@@ -26,7 +29,6 @@ export default function EventForm() {
   };
 
   const [formData, setFormData] = useState<EventFormData>(initFormData);
-  const [jsonError, setJsonError] = useState<string>("");
 
   const eventTypes = Object.values(EventTypeEnum) as EventTypeEnum[];
 
@@ -95,6 +97,15 @@ export default function EventForm() {
       return;
     }
 
+    // Prepare payload with all event information
+    const eventPayload = {
+      type: formData.type,
+      description: formData.description,
+      budget: formData.budget as number,
+      numberOfPersons: formData.numberOfPersons as number,
+      date: formData.date,
+    };
+
     // Dispatch Redux Saga action
     dispatch(
       createEventRequest({
@@ -103,7 +114,7 @@ export default function EventForm() {
         budget: formData.budget as number,
         numberOfPersons: formData.numberOfPersons as number,
         date: formData.date,
-        payload: formData.payload,
+        payload: eventPayload,
       }),
     );
   };
@@ -248,7 +259,7 @@ export default function EventForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting || !!jsonError}
+          disabled={isSubmitting}
           className="w-full px-4 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
         >
           {isSubmitting ? "Submitting..." : "Submit Event"}

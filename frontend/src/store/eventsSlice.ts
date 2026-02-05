@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { EventFormData } from "../components/EventForm";
 
 export interface Event {
+  id: number;
   type: string;
   description: string;
   budget: number;
@@ -8,6 +10,19 @@ export interface Event {
   date: string;
   payload: object;
   createdAt?: string;
+}
+
+export enum EventTypeEnum {
+  Wedding = "Wedding",
+  Birthday = "Birthday",
+  Conference = "Conference",
+  Concert = "Concert",
+  Festival = "Festival",
+  Workshop = "Workshop",
+  Seminar = "Seminar",
+  Meetup = "Meetup",
+  Fundraiser = "Fundraiser",
+  Exhibition = "Exhibition",
 }
 
 interface EventsState {
@@ -45,7 +60,7 @@ const eventsSlice = createSlice({
     },
 
     // Create event actions
-    createEventRequest: (state, _: PayloadAction<Event>) => {
+    createEventRequest: (state, _: PayloadAction<EventFormData>) => {
       state.submitStatus = "loading";
       state.error = null;
     },

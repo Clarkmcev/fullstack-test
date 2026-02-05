@@ -1,14 +1,7 @@
+import { Event } from "../store/eventsSlice";
+
 interface Props {
-  event: {
-    id: string;
-    type: string;
-    description: string;
-    budget: number;
-    numberOfPersons: number;
-    date: string;
-    payload: object;
-    createdAt: string;
-  };
+  event: Event;
 }
 
 function EventCard({ event }: Props) {
@@ -43,7 +36,7 @@ function EventCard({ event }: Props) {
         <div>
           <p className="text-sm text-gray-500">Date</p>
           <p className="text-lg font-semibold text-gray-800">
-            {new Date(event.date).toLocaleDateString()}
+            {event.date ? new Date(event.date).toLocaleDateString() : ""}
           </p>
         </div>
       </div>

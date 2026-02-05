@@ -69,7 +69,6 @@ export default function EventListPage() {
           </button>
         </div>
 
-        {/* Search/Filter Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Filter Events
@@ -141,8 +140,8 @@ export default function EventListPage() {
           </div>
         ) : (
           <div className="grid gap-6">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+            {filteredEvents.map((event, id) => (
+              <EventCard key={id} event={event} />
             ))}
           </div>
         )}

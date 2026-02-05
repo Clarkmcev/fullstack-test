@@ -21,8 +21,8 @@ you'd improve.
 
 - Form to submit a new event (type + freeform JSON payload)
 - Table/list displaying events with:
-    - Filter by event type
-    - Filter by date range
+  - Filter by event type
+  - Filter by date range
 - No need for authentication or styling beyond basic usability
 
 ## Project Structure
@@ -65,18 +65,49 @@ npm run dev
 
 ---
 
-## Your Answers
+## Local environment
 
-Please fill these out before submitting.
+The repo use task for helper commands you can install it :
+
+```
+npm install -g @go-task/cli
+```
+
+## How to run
+
+Build docker environment
+
+```
+task build
+```
+
+Run the containers
+
+```
+task up
+```
+
+## Your Answers
 
 ### 1. What trade-offs did you make and why?
 
-_Your answer here_
+- Manual DB initiation : It is simple and works for single-table schema and no migrations tools depencies needed. It might no be suited for teams environment, and can't version or rollback. To change if schema has to change and evolve frequently.
+- Basic error handling : It is fast to implement, easy to read for use and doesn't expose internal info that can be sensitive to users. This is a good enough approach for a demo/coding challenge. This works well for a demo, but this will surely bring to confusion to people who will need to debug things.
+- Docker setup : Easy setup to build and run the app, consistent environment across machines AND includes DB automatically. But this comes with the cost of slower development iteration (containers rebuild), and requires docker knowledge with more complex debugging.
+- Basic event data input validation : I went for the minimal input validation, the backend doesn't include business logic validation for speed purposes, desc has no lenght limit, budget can be very large.
+- Redux SAGA : Decided to introduce redux saga with redux toolkit to demonstrate my ability to work with complex state management patterns. This is definitely an overkill for simple CRUD operations because it comes with more boilerplate code than react queries or plain fetch. (but if the app comes to grow this is a must have)
+- Storing data in both columns and payload : dedicated columns to enable fast sql filtering or indexing, satisfies requirement of storing payload (JSON object) but data duplication increase storage by ~2x, more complexity and must keep columns in sync with payload. To change if storage costs is significant or consistency issues
+  arise.
+- No pagination : The frontend handle the filtering/sorting locally for demo purposes, but response time will grow drastically with event count.
 
 ### 2. If this needed to handle 10,000 events per second, what would you change?
 
-_Your answer here_
+- Background job queue : To handle 10.000 events per second I would introduce a system design for high throughput, horizontal scalablity and durability (Kafka, RabbitMQ, Redis Streams) to process the requests asynchronously
+- Response caching : Redis for caching GET /events, with a cache invalidation on POST /event requests to significantly reduce the database load.
+- Database indexing : Data struct such as a B-tree to improve data retrieval. I never did such an implementation in the past but this could be a way to improve performances at the cost of an increase in storage space, complexity and maintenance.
 
 ### 3. What's one thing you'd add or refactor given another few hours?
 
-_Your answer here_
+- Full stack OPEN API contract with swagger OpenAPI : to use unified TypeScript and Go generated for models and APIs.
+
+Thanks for reading, this was a cool little homework!

@@ -20,7 +20,7 @@ export default function NavigationButton({
     <Link
       to={to}
       className={`${baseClasses} ${
-        active ? "text-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
+        active ? "text-blue-500" : "text-gray-700 hover:text-blue-500"
       } ${className}`}
     >
       {children}
