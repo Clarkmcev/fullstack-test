@@ -67,11 +67,7 @@ npm run dev
 
 ## Local environment
 
-The repo use task for helper commands you can install it :
-
-```
-npm install -g @go-task/cli
-```
+The repo use task for helper commands : https://taskfile.dev/
 
 ## How to run
 
