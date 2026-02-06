@@ -141,7 +141,7 @@ export default function EventListPage() {
         ) : (
           <div className="grid gap-6">
             {filteredEvents.map((event, id) => (
-              <EventCard key={id} event={event} />
+              <EventCard key={`${event.id}-${id}`} event={event} />
             ))}
           </div>
         )}
